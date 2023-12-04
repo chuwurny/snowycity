@@ -1,5 +1,6 @@
 xorlib.Dependency("snowycity", "cl_base.lua")
 xorlib.Dependency("snowycity", "cl_config.lua")
+xorlib.Dependency("snowycity", "cl_texture_replacing.lua")
 
 local cfg = ChuSnowflakes.Config
 
@@ -105,20 +106,40 @@ function ChuSnowflakes.Think()
     emitter:Finish()
 end
 
-x.EnsureHasLocalPlayer(function(lp)
-    localPlayer = lp
+do
+    local chusnowflakes_enable = CreateClientConVar("chusnowflakes_enable", "1")
 
-    pos       = x.BindMeta("Entity", "GetPos",       lp)
-    shootPos  = x.BindMeta("Player", "GetShootPos",  lp)
-    aimVector = x.BindMeta("Player", "GetAimVector", lp)
+    local function updateSnowflakesEnableState()
+        local pause = not chusnowflakes_enable:GetBool()
 
-    timer.Create(TIMER, 1, 0, function()
-        xpcall(ChuSnowflakes.Think, x.ErrorNoHaltWithStack)
+        x.Print("Snowflakes are %s", pause and "paused" or "resumed")
+
+        ChuSnowflakes.SetPaused(pause)
+    end
+
+    x.EnsureHasLocalPlayer(function(lp)
+        localPlayer = lp
+
+        pos       = x.BindMeta("Entity", "GetPos",       lp)
+        shootPos  = x.BindMeta("Player", "GetShootPos",  lp)
+        aimVector = x.BindMeta("Player", "GetAimVector", lp)
+
+        timer.Create(TIMER, 1, 0, function()
+            xpcall(ChuSnowflakes.Think, x.ErrorNoHaltWithStack)
+        end)
+
+        updateSnowflakesEnableState()
+
+        ChuSnowflakes.ReplaceTextures()
     end)
-end)
 
-x.EnsureInitPostEntity(ChuSnowflakes.ReplaceTextures)
-hook.Add("Shutdown", "revert snowycity", ChuSnowflakes.RestoreTextures)
+    hook.Add("Shutdown", "revert snowycity", ChuSnowflakes.RestoreTextures)
 
-concommand.Add("chusnowycity_replace", ChuSnowflakes.ReplaceTextures)
-concommand.Add("chusnowycity_restore", ChuSnowflakes.RestoreTextures)
+    concommand.Add("chusnowycity_replace", ChuSnowflakes.ReplaceTextures)
+    concommand.Add("chusnowycity_restore", ChuSnowflakes.RestoreTextures)
+
+    cvars.AddChangeCallback(chusnowflakes_enable:GetName(),
+                            updateSnowflakesEnableState,
+                            "")
+end
+

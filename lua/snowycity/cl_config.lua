@@ -41,21 +41,3 @@ cfg.AIR_RESISTANCE_MIN         = 1
 cfg.AIR_RESISTANCE_MAX         = 50
 
 cfg.PERFORMANCE_MAX_TIME       = 0.01
-
-do
-    local chusnowflakes_enable = CreateClientConVar("chusnowflakes_enable", "1")
-
-    local function updateSnowflakesEnableState()
-        local pause = not chusnowflakes_enable:GetBool()
-
-        x.Print("Snowflakes are %s", pause and "paused" or "resumed")
-
-        ChuSnowflakes.SetPaused(pause)
-    end
-
-    cvars.AddChangeCallback(chusnowflakes_enable:GetName(),
-                            updateSnowflakesEnableState,
-                            "")
-
-    updateSnowflakesEnableState()
-end
