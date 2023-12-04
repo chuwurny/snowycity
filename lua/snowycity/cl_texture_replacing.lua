@@ -7,10 +7,7 @@ x.Assert(ChuSnowflakes.MapTextureReplaceList,
 
 local TEXTURE_TO_REPLACED = {}
 
-for _, data in ipairs(ChuSnowflakes.MapTextureReplaceList) do
-    local replaceFrom = data[1]
-    local replaceTo   = data[2]
-
+for replaceFrom, replaceTo in pairs(ChuSnowflakes.MapTextureReplaceList) do
     TEXTURE_TO_REPLACED[replaceFrom] = replaceTo
 end
 
@@ -20,29 +17,26 @@ local oMaterials = ChuSnowflakes.OriginalMaterials
 local cfg = ChuSnowflakes.Config
 
 function ChuSnowflakes.ReplaceTextures()
-	for _, data in ipairs(ChuSnowflakes.MapTextureReplaceList) do
-		local replaceFrom = data[1]
-		local replaceTo   = data[2]
+    for replaceFrom, replaceTo in pairs(ChuSnowflakes.MapTextureReplaceList) do
+        local replaceFromMaterial = Material(replaceFrom)
 
-		local replaceFromMaterial = Material(replaceFrom)
 
-		oMaterials[replaceFrom] = oMaterials[replaceFrom] or
+        oMaterials[replaceFrom] = oMaterials[replaceFrom] or
                                   replaceFromMaterial:GetTexture("$basetexture")
                                                      :GetName()
 
-		replaceFromMaterial:SetTexture("$basetexture", replaceTo)
-	end
+        replaceFromMaterial:SetTexture("$basetexture", replaceTo)
+    end
 end
 
 function ChuSnowflakes.RestoreTextures()
-	for _, data in ipairs(ChuSnowflakes.MapTextureReplaceList) do
-		local replaceFrom = data[1]
-		local original    = oMaterials[replaceFrom]
+    for replaceFrom, _ in pairs(ChuSnowflakes.MapTextureReplaceList) do
+        local original = oMaterials[replaceFrom]
 
-		if original then
-			Material(replaceFrom):SetTexture("$basetexture", original)
-		end
-	end
+        if original then
+            Material(replaceFrom):SetTexture("$basetexture", original)
+        end
+    end
 end
 
 local TRACE_DIR = Vector(0, 0, -100)
