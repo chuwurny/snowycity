@@ -1,0 +1,1 @@
+ChuSnowflakes = ChuSnowflakes or {}
