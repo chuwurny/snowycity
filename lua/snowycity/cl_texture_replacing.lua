@@ -20,6 +20,9 @@ function ChuSnowflakes.ReplaceTextures()
     for replaceFrom, replaceTo in pairs(ChuSnowflakes.MapTextureReplaceList) do
         local replaceFromMaterial = Material(replaceFrom)
 
+        if replaceFromMaterial:IsError() then
+            x.Warn("Replace material \"%s\" is invalid", replaceFrom)
+        end
 
         oMaterials[replaceFrom] = oMaterials[replaceFrom] or
                                   replaceFromMaterial:GetTexture("$basetexture")
