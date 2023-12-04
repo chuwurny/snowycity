@@ -1,10 +1,6 @@
 xorlib.Dependency("snowycity", "cl_base.lua")
 xorlib.Dependency("snowycity", "cl_config.lua")
-
-local MAP_CONFIG_FOUND = xorlib.Dependency("snowycity/map_config",
-                                           game.GetMap() .. ".lua")
-
-x.Assert(MAP_CONFIG_FOUND, "No config found for map %s", game.GetMap())
+xorlib.Dependency("snowycity", "sh_map_config_loader.lua")
 
 x.Assert(ChuSnowflakes.MapTextureReplaceList,
          "Forgot to create ChuSnowflakes.MapTextureReplaceList?")
