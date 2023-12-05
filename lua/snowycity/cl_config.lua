@@ -1,4 +1,4 @@
-xorlib.Dependency("snowycity", "cl_main.lua")
+xorlib.Dependency("snowycity", "cl_base.lua")
 
 ChuSnowflakes.Config = ChuSnowflakes.Config or {}
 
